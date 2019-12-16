@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">E2EE App</string>
+    <string name="users">Users</string>
+    <string name="enter_message">Enter Message</string>
+    <string name="send">Send</string>
+    <string name="user_name">User Name</string>
+    <string name="encrypted_text">Encrypted Text</string>
+    <string name="get_text">Get Text</string>
+    <string name="decrypted_text">Decrypted Text</string>
+</resources>

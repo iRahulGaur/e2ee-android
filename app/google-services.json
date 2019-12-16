@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "702062120261",
+    "firebase_url": "https://e2ee-app.firebaseio.com",
+    "project_id": "e2ee-app",
+    "storage_bucket": "e2ee-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:702062120261:android:767b5b86de614390c0022c",
+        "android_client_info": {
+          "package_name": "com.aws.e2eeapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "702062120261-rison6kn1820otk54ea41f2b1n64tbf4.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.aws.e2eeapp",
+            "certificate_hash": "f8034fa2d5da8b0aba3ea9f5b93e381aa6553ecf"
+          }
+        },
+        {
+          "client_id": "702062120261-m66kbeiojtvjj87bbnq9rv23ibi9nga1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAQ3mF4PCKdKk3bpc7huLSv_r__NWpIthk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "702062120261-m66kbeiojtvjj87bbnq9rv23ibi9nga1.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
