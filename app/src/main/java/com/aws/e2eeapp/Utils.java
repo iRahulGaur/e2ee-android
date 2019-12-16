@@ -7,7 +7,6 @@ import java.security.KeyPairGenerator;
 import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
-import java.security.SecureRandom;
 import java.util.Arrays;
 
 import javax.crypto.Cipher;
@@ -23,12 +22,11 @@ class Utils {
 
     private static final String ALGORITHM = "RSA";
 
-    static KeyPair generateKeyPair()
-            throws NoSuchAlgorithmException {
+    static KeyPair generateKeyPair() throws NoSuchAlgorithmException {
 
         KeyPairGenerator keyGen = KeyPairGenerator.getInstance(ALGORITHM);
 
-        keyGen.initialize(4096, new SecureRandom());
+        keyGen.initialize(1024);
 
         KeyPair generateKeyPair = keyGen.generateKeyPair();
 
@@ -45,9 +43,8 @@ class Utils {
         cipher.init(Cipher.ENCRYPT_MODE, publicKey);
 
         //Perform Encryption
-        byte[] cipherText = cipher.doFinal(plainText.getBytes());
 
-        return cipherText;
+        return cipher.doFinal(plainText.getBytes());
     }
 
     static String decrypt(byte[] cipherTextArray, PrivateKey privateKey) throws Exception {
