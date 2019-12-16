@@ -11,12 +11,10 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import java.nio.charset.StandardCharsets;
 import java.security.KeyPair;
 import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
-import java.util.Arrays;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -44,7 +42,6 @@ public class Message extends AppCompatActivity {
 
     private PrivateKey privateKey;
     byte[] encryptedBytes = null;
-    byte[] decryptedBytes = null;
     private static final String TAG = "Message";
 
     public PublicKey publicKey;
@@ -84,8 +81,7 @@ public class Message extends AppCompatActivity {
     @SuppressLint("SetTextI18n")
     private void getMessage() {
         try {
-            decryptedBytes = Utils.decrypt(privateKey.getEncoded(), encryptedBytes);
-            String decryptedString = new String(decryptedBytes);
+            String decryptedString = Utils.decrypt(encryptedBytes, privateKey);
 
             Log.e(TAG, "getMessage: data decrypted " + decryptedString);
             decryptedTextView.setText(decryptedString + "");
@@ -98,15 +94,14 @@ public class Message extends AppCompatActivity {
     @SuppressLint("SetTextI18n")
     private void sendMessage() {
         String message = messageEt.getText().toString();
+        Log.e(TAG, "sendMessage: data size " + message.length());
 
         if (!message.isEmpty()) {
             try {
-                encryptedBytes = Utils.encrypt(publicKey.getEncoded(), message.getBytes(StandardCharsets.UTF_8));
-                encryptedTextView.setText(Arrays.toString(encryptedBytes));
-                String ecryptedString = Arrays.toString(encryptedBytes);
-
+                encryptedBytes = Utils.encrypt(message, publicKey);
+                String encryptedString = new String(encryptedBytes);
                 Toast.makeText(this, "Message Encrypted ", Toast.LENGTH_SHORT).show();
-                encryptedTextView.setText(ecryptedString);
+                encryptedTextView.setText(encryptedString);
             } catch (Exception e) {
                 e.printStackTrace();
                 Log.e(TAG, "sendMessage: exception in encryption " + e.getMessage());
