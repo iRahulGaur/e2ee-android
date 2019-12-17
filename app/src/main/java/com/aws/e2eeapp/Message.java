@@ -110,12 +110,14 @@ public class Message extends AppCompatActivity {
     @SuppressLint("SetTextI18n")
     private void getMessage() {
         try {
+            //get secretMessage using public key
             String decryptedSecretKey = Utils.decrypt(encryptedBytes, privateKey);
 
             Log.e(TAG, "getMessage: this is secret key used to encrypt the data : " + decryptedSecretKey);
 
             Log.e(TAG, "sendMessage: AES encrypted message in get Message : " + encryptedMessage);
 
+            // decrypt the real message using the secretMessage
             String decryptedMessage = Utils.AESDecryptionString(encryptedMessage, decryptedSecretKey);
             decryptedTextView.setText(decryptedMessage + "");
         } catch (Exception e) {
@@ -132,6 +134,7 @@ public class Message extends AppCompatActivity {
         if (!message.isEmpty()) {
             try {
 
+                // encrypting the real data with secretMessage
                 encryptedMessage = Utils.AESEncryptionString(message, secretKey);
                 Log.e(TAG, "sendMessage: AES encrypted message " + encryptedMessage);
                 String dec = Utils.AESDecryptionString(encryptedMessage, secretKey);
@@ -140,8 +143,8 @@ public class Message extends AppCompatActivity {
                 // Gets the file from the primary external storage space of the
                 // current application.
                 File testFile = new File(this.getExternalFilesDir(null), "key.pub");
-                // Reads the data from the file
 
+                // Reads the data from the file
                 FileInputStream reader;
                 reader = new FileInputStream(testFile);
 
@@ -152,12 +155,11 @@ public class Message extends AppCompatActivity {
                     os.write(b, 0, c);
                 }
 
-               //Log.e(TAG, "sendMessage: os bytes " + Arrays.toString(os.toByteArray()));
-
+                // get the public key encoded from the file
                 byte[] pubKeyEncoded = os.toByteArray();
-
                 reader.close();
 
+                // encrypt the secretKey message using public key
                 encryptedBytes = Utils.encrypt(secretKey, pubKeyEncoded);
                 String encryptedString = new String(encryptedBytes);
                 Toast.makeText(this, "Message Encrypted ", Toast.LENGTH_SHORT).show();
