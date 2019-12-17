@@ -2,11 +2,13 @@ package com.aws.e2eeapp;
 
 import android.util.Log;
 
+import java.security.KeyFactory;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
+import java.security.spec.X509EncodedKeySpec;
 import java.util.Arrays;
 
 import javax.crypto.Cipher;
@@ -26,7 +28,7 @@ class Utils {
 
         KeyPairGenerator keyGen = KeyPairGenerator.getInstance(ALGORITHM);
 
-        keyGen.initialize(1024);
+        keyGen.initialize(2048);
 
         KeyPair generateKeyPair = keyGen.generateKeyPair();
 
@@ -35,9 +37,12 @@ class Utils {
         return generateKeyPair;
     }
 
-    static byte[] encrypt(String plainText, PublicKey publicKey) throws Exception {
+    static byte[] encrypt(String plainText, byte[] publicKeyEncoded) throws Exception {
         //Get Cipher Instance RSA With ECB Mode and OAEPWITHSHA-512ANDMGF1PADDING Padding
         Cipher cipher = Cipher.getInstance("RSA/ECB/OAEPWITHSHA-512ANDMGF1PADDING");
+
+        PublicKey publicKey =
+                KeyFactory.getInstance("RSA").generatePublic(new X509EncodedKeySpec(publicKeyEncoded));
 
         //Initialize Cipher for ENCRYPT_MODE
         cipher.init(Cipher.ENCRYPT_MODE, publicKey);

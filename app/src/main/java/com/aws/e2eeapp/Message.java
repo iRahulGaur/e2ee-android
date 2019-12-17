@@ -1,6 +1,7 @@
 package com.aws.e2eeapp;
 
 import android.annotation.SuppressLint;
+import android.media.MediaScannerConnection;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -11,10 +12,16 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.security.KeyPair;
 import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
+import java.util.Arrays;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -60,6 +67,28 @@ public class Message extends AppCompatActivity {
             KeyPair keyPair = Utils.generateKeyPair();
             privateKey = keyPair.getPrivate();
             publicKey = keyPair.getPublic();
+
+            try {
+                // Creates a file in the primary external storage space of the
+                // current application.
+                // If the file does not exists, it is created.
+                File testFile = new File(this.getExternalFilesDir(null), "key.pub");
+
+                // Adds a line to the file
+                FileOutputStream writer = new FileOutputStream(testFile);
+                writer.write(publicKey.getEncoded());
+                writer.close();
+                // Refresh the data so it can seen when the device is plugged in a
+                // computer. You may have to unplug and replug the device to see the
+                // latest changes. This is not necessary if the user should not modify
+                // the files.
+                MediaScannerConnection.scanFile(this,
+                        new String[]{testFile.toString()},
+                        null,
+                        null);
+            } catch (IOException e) {
+                Log.e("ReadWriteFile", "Unable to write to the TestFile.txt file.");
+            }
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
             Log.e(TAG, "initKeys: exception " + e.getMessage());
@@ -98,7 +127,30 @@ public class Message extends AppCompatActivity {
 
         if (!message.isEmpty()) {
             try {
-                encryptedBytes = Utils.encrypt(message, publicKey);
+
+                // Gets the file from the primary external storage space of the
+                // current application.
+                File testFile = new File(this.getExternalFilesDir(null), "key.pub");
+                // Reads the data from the file
+                Log.e(TAG, "sendMessage: this is pub encoded " + Arrays.toString(publicKey.getEncoded()));
+
+                FileInputStream reader;
+                reader = new FileInputStream(testFile);
+
+                byte[] b = new byte[1024];
+                ByteArrayOutputStream os = new ByteArrayOutputStream();
+                int c;
+                while ((c = reader.read(b)) != -1) {
+                    os.write(b, 0, c);
+                }
+
+                Log.e(TAG, "sendMessage: os bytes " + Arrays.toString(os.toByteArray()));
+
+                byte[] pubKeyEncoded = os.toByteArray();
+
+                reader.close();
+
+                encryptedBytes = Utils.encrypt(message, pubKeyEncoded);
                 String encryptedString = new String(encryptedBytes);
                 Toast.makeText(this, "Message Encrypted ", Toast.LENGTH_SHORT).show();
                 encryptedTextView.setText(encryptedString);
