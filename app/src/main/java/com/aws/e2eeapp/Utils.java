@@ -64,11 +64,9 @@ class Utils {
 
         keyGen.initialize(2048);
 
-        KeyPair generateKeyPair = keyGen.generateKeyPair();
-
         //Log.e(TAG, "generateKeyPair: this is public key encoding " + Arrays.toString(generateKeyPair.getPrivate().getEncoded()));
 
-        return generateKeyPair;
+        return keyGen.generateKeyPair();
     }
 
     static byte[] encrypt(String plainText, byte[] publicKeyEncoded) throws Exception {
